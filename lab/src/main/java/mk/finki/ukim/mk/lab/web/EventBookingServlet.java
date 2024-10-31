@@ -16,10 +16,12 @@ import java.io.IOException;
 @WebServlet(name = "eventBookingServlet", urlPatterns = "/eventBooking")
 public class EventBookingServlet extends HttpServlet {
 
+    private final EventBookingService eventBookingService;
     private final SpringTemplateEngine springTemplateEngine;
 
-    public EventBookingServlet(SpringTemplateEngine springTemplateEngine) {
+    public EventBookingServlet(EventBookingService eventBookingService, SpringTemplateEngine springTemplateEngine) {
         super();
+        this.eventBookingService = eventBookingService;
         this.springTemplateEngine = springTemplateEngine;
     }
 
@@ -34,6 +36,13 @@ public class EventBookingServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
+       String search = req.getParameter("search");
+       if(search != null && !search.isEmpty()){
+           JakartaServletWebApplication application = JakartaServletWebApplication.buildApplication(req.getServletContext());
+           IServletWebExchange exchange = application.buildExchange(req, resp);
+           WebContext context = new WebContext(exchange);
+           context.setVariable("searched",eventBookingService.searchEvents(search));
+           springTemplateEngine.process("searchedMyBookings.html", context, resp.getWriter());
+       }
     }
 }

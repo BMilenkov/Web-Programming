@@ -9,4 +9,5 @@ public class Event {
     private String name;
     private String description;
     private double popularityScore;
+    private Category category;
 }

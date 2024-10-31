@@ -26,6 +26,16 @@
         </label>
         <br/>
         <br/>
+        <label for="categorySelect">Search by Category:</label>
+        <select id="categorySelect" name="category">
+            <option value="">Select a category</option>
+            <div th:each="category : ${categories}">
+                <option th:value="${category.category}" th:text="${category.category}"></option>
+            </div>
+        </select>
+        <input type="submit" value="Search">
+        <br/>
+        <br/>
         <label>
             Your name:
             <input type="text" name="attName">
@@ -38,6 +48,7 @@
                 Name: <span th:text="${event.name}"></span><br/>
                 Description: <span th:text="${event.description}"></span><br/>
                 Rating: <span th:text="${event.popularityScore}"></span><br/>
+                Category: <span th:text="${event.getCategory().category}"></span><br/>
             </label><br/>
         </div>
 
