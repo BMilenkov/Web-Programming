@@ -1,4 +1,4 @@
-package mk.finki.ukim.mk.lab.web;
+package mk.finki.ukim.mk.lab.web.servlet;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import mk.finki.ukim.mk.lab.model.Event;
 import mk.finki.ukim.mk.lab.model.EventBooking;
+import mk.finki.ukim.mk.lab.service.CategoryService;
 import mk.finki.ukim.mk.lab.service.EventBookingService;
 import mk.finki.ukim.mk.lab.service.EventService;
 import org.thymeleaf.context.WebContext;
@@ -18,17 +19,19 @@ import java.io.IOException;
 import java.util.List;
 
 
-@WebServlet(name = "eventListServlet", urlPatterns = "/events")
+@WebServlet(name = "eventListServlet", urlPatterns = "/servlet/events")
 public class EventListServlet extends HttpServlet {
     private final EventService eventService;
     private final EventBookingService eventBookingService;
     private final SpringTemplateEngine springTemplateEngine;
+    private final CategoryService categoryService;
 
     public EventListServlet(EventService eventService, EventBookingService eventBookingService,
-                            SpringTemplateEngine springTemplateEngine) {
+                            SpringTemplateEngine springTemplateEngine, CategoryService categoryService) {
         this.eventService = eventService;
         this.eventBookingService = eventBookingService;
         this.springTemplateEngine = springTemplateEngine;
+        this.categoryService = categoryService;
     }
 
     @Override
@@ -38,7 +41,7 @@ public class EventListServlet extends HttpServlet {
         WebContext context = new WebContext(exchange);
 
         context.setVariable("events", this.eventService.listAll());
-        context.setVariable("categories",this.eventService.listCategories());
+        context.setVariable("categories", this.categoryService.findAll());
 
         springTemplateEngine.process("listEvents.html", context, resp.getWriter());
     }
@@ -53,14 +56,14 @@ public class EventListServlet extends HttpServlet {
         if (category != null && !category.isEmpty()) {
             List<Event> searchList = this.eventService.searchByCategory(category);
             context.setVariable("events", searchList);
-            context.setVariable("categories",this.eventService.listCategories());
+            context.setVariable("categories", this.categoryService.findAll());
             springTemplateEngine.process("listEvents.html", context, resp.getWriter());
         }
         String search = req.getParameter("search");
         if (search != null && !search.isEmpty()) {
             List<Event> searchList = this.eventService.searchEvents(search);
             context.setVariable("events", searchList);
-            context.setVariable("categories",this.eventService.listCategories());
+            context.setVariable("categories", this.categoryService.findAll());
             springTemplateEngine.process("listEvents.html", context, resp.getWriter());
         } else {
             String name = req.getParameter("event");

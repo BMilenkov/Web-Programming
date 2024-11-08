@@ -1,64 +1,108 @@
-<html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <title>Event Booking page - Welcome and choose an Event</title>
-    <style type="text/css">
-        body {
-            width: 800px;
-            margin: auto;
-        }
-    </style>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/e59232f0a1.js" crossorigin="anonymous"></script>
 </head>
 <body>
-<header>
-    <h1>Welcome to our Event Booking App</h1>
-</header>
-<main>
-    <h2>Choose an event:</h2>
-    <!-- Display radio buttons for each event,
-            the value should be the event name
-            and the displayed text should be Name: <event_name>, Description: <event_description>, Rating: <popularity_score> -->
-    <form th:action='@{/events}' th:method="POST">
-        <label>
-            Search:
-            <input type="search" name="search">
-            <input type="submit" value="Search">
-        </label>
-        <br/>
-        <br/>
-        <label for="categorySelect">Search by Category:</label>
-        <select id="categorySelect" name="category">
-            <option value="">Select a category</option>
-            <div th:each="category : ${categories}">
-                <option th:value="${category.category}" th:text="${category.category}"></option>
-            </div>
-        </select>
-        <input type="submit" value="Search">
-        <br/>
-        <br/>
-        <label>
-            Your name:
-            <input type="text" name="attName">
-        </label>
-        <br/>
-        <br/>
-        <div th:each="event:${events}">
-            <label>
-                <input type="radio" name="event" th:value="${event.name}">
-                Name: <span th:text="${event.name}"></span><br/>
-                Description: <span th:text="${event.description}"></span><br/>
-                Rating: <span th:text="${event.popularityScore}"></span><br/>
-                Category: <span th:text="${event.getCategory().category}"></span><br/>
-            </label><br/>
-        </div>
+<div class="container mt-4">
+    <header class="text-center mb-5">
+        <h1>Welcome to our Event Booking App</h1>
+    </header>
 
-        <h2>Choose number of tickets:</h2>
-        <label>
-            <input type="number" name="numTickets" min="1" max="10">
-        </label><br/>
-        <br/>
-        <input type="submit" value="Submit">
-    </form>
-</main>
+    <main>
+        <div th:if="${hasError}">
+            <div class="alert alert-danger" role="alert">
+                <th:block th:text="${error}"></th:block>
+            </div>
+        </div>
+        <div>
+            <form th:action='@{/events/search}' th:method="POST">
+                <label for="search">Search</label>
+                <input id="search" type="search" name="search">
+                <input type="submit" class="btn btn-primary">
+            </form>
+        </div>
+        <div>
+            <form th:action='@{/events/searchByCategory}' th:method="POST">
+                <label for="searchByCategory">Search By Category</label>
+                <select id="searchByCategory" name="searchByCategory" class="form-control">
+                    <option th:each="cat : ${categories}" th:value="${cat.id}"
+                            th:text="${cat.category}">
+                    </option>
+                </select>
+                <br/>
+                <input type="submit" class="btn btn-primary">
+            </form>
+        </div>
+        <h2 class="mb-4">Choose an event:</h2>
+        <!-- Display radio buttons for each event -->
+        <form th:action='@{/eventBooking/book}' th:method="POST">
+            <div class="form-group">
+                <label for="attName">Your name:</label>
+                <input type="text" class="form-control" id="attName" name="attName" required
+                       placeholder="Enter your name">
+            </div>
+            <div class="mb-4">
+                <div th:each="event : ${events}">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <input type="radio" name="event" th:value="${event.name}">
+                                <span th:text="${event.name}"></span>
+                            </h5>
+                            <p class="card-text">
+                                <strong>Description:</strong> <span th:text="${event.description}"></span><br/>
+                                <strong>Rating:</strong> <span th:text="${event.popularityScore}"></span><br/>
+                                <strong>Location:</strong> <span
+                                    th:text="${event.getLocation().getAddress()}"></span><br/>
+                                <strong>Category:</strong> <span th:text="${event.getCategory().category}"></span><br/>
+                            </p>
+                            <a th:href="@{'/events/edit-form/{id}' (id=${event.getId()})}" class="btn btn-info btn-sm">
+                                <i class="fa fa-edit"></i> Edit
+                            </a>
+                            <a th:href="@{'/events/delete/{id}' (id=${event.getId()})}" class="btn btn-danger btn-sm">
+                                <i class="fa fa-trash"></i> Delete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="mb-4">Choose number of tickets:</h2>
+            <div class="form-group">
+                <label for="numTickets">Number of tickets:</label>
+                <input type="number" class="form-control" id="numTickets" name="numTickets" min="1" max="10" required>
+            </div>
+
+            <div class="form-group text-center">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+
+        <div class="col mb-3 mt-4">
+            <div class="row">
+                <div class="col-md-12">
+                    <a href="/events/add-form" class="btn btn-dark btn-block">
+                        Add new event
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
 </body>
 </html>

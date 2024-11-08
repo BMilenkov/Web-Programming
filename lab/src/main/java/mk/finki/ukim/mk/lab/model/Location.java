@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class Category {
+public class Location {
     private Long id;
-    private String category;
+    private String address;
 }
