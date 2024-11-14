@@ -49,7 +49,7 @@ public class EventRepository {
         if (category == null || location == null) {
             throw new IllegalArgumentException();
         }
-        Event event = new Event((long) (Math.random() * 1000), name, description, popularityScore, category, location);
+        Event event = new Event((long) (Math.random() * 1000), name, description, popularityScore, category, location, false, 60);
         DataHolder.events.removeIf(event1 -> event1.getName().equals(name));
         DataHolder.events.add(event);
         return Optional.of(event);
@@ -59,4 +59,17 @@ public class EventRepository {
         DataHolder.events.removeIf(event -> event.getId().equals(id));
     }
 
+    public void like(Event event) {
+        double score = event.getPopularityScore();
+        event.setPopularityScore(score + 10);
+        event.setClicked(true);
+    }
+
+    public void decrementNum(Event event, int numTickets) {
+        int numCarts = event.getNumTickets();
+        int canCheck = numCarts - numTickets;
+        if (canCheck >= 0)
+            event.setNumTickets(canCheck);
+        else event.setNumTickets(0);
+    }
 }

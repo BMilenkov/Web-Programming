@@ -13,5 +13,6 @@ public class Event {
     private double popularityScore;
     private Category category; //canChange
     private Location location; //canChange
-
+    private boolean isClicked;
+    private int numTickets;
 }

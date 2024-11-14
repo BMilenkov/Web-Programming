@@ -1,0 +1,58 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Event</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/e59232f0a1.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<div xmlns:th="http://www.thymeleaf.org">
+    <section class="jumbotron text-center">
+        <div class="container">
+            <h1 class="jumbotron-heading">WEB PROGRAMMING SHOP</h1>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5">
+                <form th:action="@{'/events/like/{id}' (id=${event.getId()})}" method="POST">
+                    <div class="card mb-6">
+                        <p class="card-text">
+                            <strong>Event:</strong> <span th:text="${event.name}"></span><br/>
+                            <strong>Description:</strong> <span th:text="${event.description}"></span><br/>
+                            <strong>Rating:</strong> <span th:text="${event.popularityScore}"></span><br/>
+                            <strong>Location Name:</strong> <span
+                                th:text="${event.getLocation().getName()}"></span><br/>
+                            <strong>Location Address:</strong> <span
+                                th:text="${event.getLocation().getAddress()}"></span><br/>
+                            <strong>Location Capacity:</strong> <span
+                                th:text="${event.getLocation().getCapacity()}"></span><br/>
+                            <strong>Location Description:</strong> <span
+                                th:text="${event.getLocation().getDescription()}"></span><br/>
+                            <strong>Category:</strong> <span th:text="${event.getCategory().getCategory()}"></span><br/>
+                        </p>
+                    </div>
+                  <button th:disabled="${event.isClicked()}"
+                          type="submit" class="btn btn-primary">
+                    <i class="fas fa-thumbs-up"></i>Like
+                  </button>
+                  <a href="/events" class="btn btn-secondary">Back</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

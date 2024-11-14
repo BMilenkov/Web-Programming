@@ -63,7 +63,7 @@
               <label>Location</label>
               <select name="locationId" class="form-control">
                 <option th:each="loc : ${locations}" th:value="${loc.id}"
-                        th:text="${loc.address}"
+                        th:text="${loc.name}"
                         th:selected="${event != null && event.location.id == loc.id}">
                 </option>
               </select>

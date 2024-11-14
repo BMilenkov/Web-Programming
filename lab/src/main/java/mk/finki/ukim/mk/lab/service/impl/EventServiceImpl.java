@@ -62,4 +62,17 @@ public class EventServiceImpl implements EventService {
     public void deleteById(Long id) {
         eventRepository.deleteById(id);
     }
+
+    @Override
+    public void like(Long id) {
+        Event event = null;
+        if (this.eventRepository.findById(id).isPresent())
+            event = this.eventRepository.findById(id).get();
+        this.eventRepository.like(event);
+    }
+
+    @Override
+    public void reserveCard(Event event, int numTickets) {
+        this.eventRepository.decrementNum(event, numTickets);
+    }
 }

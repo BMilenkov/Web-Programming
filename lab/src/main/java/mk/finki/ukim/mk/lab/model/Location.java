@@ -7,5 +7,8 @@ import lombok.Data;
 @AllArgsConstructor
 public class Location {
     private Long id;
+    private String name;
     private String address;
+    private String capacity;
+    private String description;
 }

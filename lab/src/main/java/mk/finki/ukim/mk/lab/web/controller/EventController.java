@@ -119,4 +119,19 @@ public class EventController {
         }
         return "redirect:/events";
     }
+
+    @GetMapping("/details/{id}")
+    public String getDetails(@PathVariable Long id, Model model){
+        Event event = null;
+        if(eventService.findById(id).isPresent())
+            event = eventService.findById(id).get();
+        model.addAttribute("event", event);
+        return "details";
+    }
+
+    @PostMapping("/like/{id}")
+    public String likeEvent(@PathVariable Long id){
+        this.eventService.like(id);
+        return "redirect:/events/details/{id}";
+    }
 }

@@ -21,5 +21,6 @@ public interface EventService {
     Optional<Event> save(String name, String description, double popularityScore, Long categoryId, Long locationId);
 
     void deleteById(Long id);
-
+    void like(Long id);
+    void reserveCard(Event id, int numTickets);
 }

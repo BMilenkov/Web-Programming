@@ -65,17 +65,23 @@
                                 <span th:text="${event.name}"></span>
                             </h5>
                             <p class="card-text">
-                                <strong>Description:</strong> <span th:text="${event.description}"></span><br/>
-                                <strong>Rating:</strong> <span th:text="${event.popularityScore}"></span><br/>
+                                <!--                                <strong>Description:</strong> <span th:text="${event.description}"></span><br/>-->
+                                <!--                                <strong>Rating:</strong> <span th:text="${event.popularityScore}"></span><br/>-->
                                 <strong>Location:</strong> <span
-                                    th:text="${event.getLocation().getAddress()}"></span><br/>
-                                <strong>Category:</strong> <span th:text="${event.getCategory().category}"></span><br/>
+                                    th:text="${event.getLocation().getName()}"></span><br/>
+                                <strong>Category:</strong> <span
+                                    th:text="${event.getCategory().category}"></span><br/>
+                                <strong>Available Tickets:</strong> <span
+                                    th:text="${event.getNumTickets()}"></span><br/>
                             </p>
                             <a th:href="@{'/events/edit-form/{id}' (id=${event.getId()})}" class="btn btn-info btn-sm">
                                 <i class="fa fa-edit"></i> Edit
                             </a>
                             <a th:href="@{'/events/delete/{id}' (id=${event.getId()})}" class="btn btn-danger btn-sm">
                                 <i class="fa fa-trash"></i> Delete
+                            </a>
+                            <a th:href="@{'/events/details/{id}' (id=${event.getId()})}" class="btn btn-danger btn-sm">
+                                <i class="fas fa-info-circle"></i> Review
                             </a>
                         </div>
                     </div>
@@ -85,7 +91,7 @@
             <h2 class="mb-4">Choose number of tickets:</h2>
             <div class="form-group">
                 <label for="numTickets">Number of tickets:</label>
-                <input type="number" class="form-control" id="numTickets" name="numTickets" min="1" max="10" required>
+                <input type="number" class="form-control" id="numTickets" name="numTickets" min="1" max="40" required>
             </div>
 
             <div class="form-group text-center">
