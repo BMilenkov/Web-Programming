@@ -1,7 +1,8 @@
 package mk.finki.ukim.mk.lab.service.impl;
 
 import mk.finki.ukim.mk.lab.model.Location;
-import mk.finki.ukim.mk.lab.repository.LocationRepository;
+import mk.finki.ukim.mk.lab.repository.inMemory.InMemoryLocationRepository;
+import mk.finki.ukim.mk.lab.repository.jpa.LocationRepository;
 import mk.finki.ukim.mk.lab.service.LocationService;
 import org.springframework.stereotype.Service;
 

@@ -20,39 +20,58 @@
 <div xmlns:th="http://www.thymeleaf.org">
     <section class="jumbotron text-center">
         <div class="container">
-            <h1 class="jumbotron-heading">WEB PROGRAMMING SHOP</h1>
+            <h1 class="display-4 font-weight-bold">Event Details</h1>
+            <p class="lead text-muted">Explore the details of your selected event</p>
         </div>
     </section>
 
-    <div class="container">
-        <div class="row">
-            <div class="col-md-5">
-                <form th:action="@{'/events/like/{id}' (id=${event.getId()})}" method="POST">
-                    <div class="card mb-6">
-                        <p class="card-text">
-                            <strong>Event:</strong> <span th:text="${event.name}"></span><br/>
-                            <strong>Description:</strong> <span th:text="${event.description}"></span><br/>
-                            <strong>Rating:</strong> <span th:text="${event.popularityScore}"></span><br/>
-                            <strong>Location Name:</strong> <span
-                                th:text="${event.getLocation().getName()}"></span><br/>
-                            <strong>Location Address:</strong> <span
-                                th:text="${event.getLocation().getAddress()}"></span><br/>
-                            <strong>Location Capacity:</strong> <span
-                                th:text="${event.getLocation().getCapacity()}"></span><br/>
-                            <strong>Location Description:</strong> <span
-                                th:text="${event.getLocation().getDescription()}"></span><br/>
-                            <strong>Category:</strong> <span th:text="${event.getCategory().getCategory()}"></span><br/>
-                        </p>
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-lg">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h3 th:text="${event.name}" class="mb-0 font-weight-bold"></h3>
                     </div>
-                  <button th:disabled="${event.isClicked()}"
-                          type="submit" class="btn btn-primary">
-                    <i class="fas fa-thumbs-up"></i>Like
-                  </button>
-                  <a href="/events" class="btn btn-secondary">Back</a>
-                </form>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <strong>Description:</strong>
+                                <span th:text="${event.description}"></span>
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Rating:</strong>
+                                <span th:text="${event.popularityScore}"></span>
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Location:</strong>
+                                <span th:text="${event.getLocation().getName()}"></span>,
+                                <span th:text="${event.getLocation().getAddress()}"></span>
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Capacity:</strong>
+                                <span th:text="${event.getLocation().getCapacity()}"></span>
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Category:</strong>
+                                <span th:text="${event.getCategory().getCategory()}"></span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-footer text-center">
+                        <!--                        <form th:action="@{'/events/like/{id}' (id=${event.getId()})}" method="POST" class="d-inline">-->
+                        <!--                            <button th:disabled="${event.isClicked()}"-->
+                        <!--                                    type="submit"-->
+                        <!--                                    class="btn btn-primary btn-sm">-->
+                        <!--                                <i class="fas fa-thumbs-up"></i> Like-->
+                        <!--                            </button>-->
+                        <!--                        </form>-->
+                        <a href="/events" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 </body>
-</html>

@@ -1,7 +1,8 @@
 package mk.finki.ukim.mk.lab.service.impl;
 
 import mk.finki.ukim.mk.lab.model.Category;
-import mk.finki.ukim.mk.lab.repository.CategoryRepository;
+import mk.finki.ukim.mk.lab.repository.inMemory.InMemoryCategoryRepository;
+import mk.finki.ukim.mk.lab.repository.jpa.CategoryRepository;
 import mk.finki.ukim.mk.lab.service.CategoryService;
 import org.springframework.stereotype.Service;
 

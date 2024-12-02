@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import mk.finki.ukim.mk.lab.model.Event;
 import mk.finki.ukim.mk.lab.model.EventBooking;
+import mk.finki.ukim.mk.lab.model.User;
 import mk.finki.ukim.mk.lab.service.CategoryService;
 import mk.finki.ukim.mk.lab.service.EventBookingService;
 import mk.finki.ukim.mk.lab.service.EventService;
@@ -54,8 +55,8 @@ public class EventListServlet extends HttpServlet {
 
         String category = req.getParameter("category");
         if (category != null && !category.isEmpty()) {
-            List<Event> searchList = this.eventService.searchByCategory(category);
-            context.setVariable("events", searchList);
+//            List<Event> searchList = this.eventService.findByCategory(category);
+//            context.setVariable("events", searchList);
             context.setVariable("categories", this.categoryService.findAll());
             springTemplateEngine.process("listEvents.html", context, resp.getWriter());
         }
@@ -70,7 +71,8 @@ public class EventListServlet extends HttpServlet {
             String attName = req.getParameter("attName");
             String address = req.getRemoteAddr();
             int numTickets = Integer.parseInt(req.getParameter("numTickets"));
-            EventBooking newBooking = eventBookingService.placeBooking(name, attName, address, numTickets);
+            User user = (User) req.getSession().getAttribute("user");
+            EventBooking newBooking = eventBookingService.placeBooking(user,name, attName, address, numTickets);
             req.getSession().setAttribute("myBookings", eventBookingService.listAll());
 //            req.getSession().setAttribute("myBookings", eventBookingService.placeBooking(name, attName, address, numTickets));
             resp.sendRedirect("/eventBooking");

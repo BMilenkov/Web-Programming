@@ -1,16 +1,14 @@
-package mk.finki.ukim.mk.lab.repository;
+package mk.finki.ukim.mk.lab.repository.inMemory;
 
 import mk.finki.ukim.mk.lab.bootsrap.DataHolder;
 import mk.finki.ukim.mk.lab.model.Category;
-import mk.finki.ukim.mk.lab.model.Event;
-import mk.finki.ukim.mk.lab.model.Location;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class CategoryRepository {
+public class InMemoryCategoryRepository {
     public List<Category> findAll() {
         return DataHolder.categories.stream().toList();
     }

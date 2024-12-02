@@ -1,4 +1,4 @@
-package mk.finki.ukim.mk.lab.repository;
+package mk.finki.ukim.mk.lab.repository.inMemory;
 
 import mk.finki.ukim.mk.lab.bootsrap.DataHolder;
 import mk.finki.ukim.mk.lab.model.Category;
@@ -6,16 +6,15 @@ import mk.finki.ukim.mk.lab.model.Event;
 import mk.finki.ukim.mk.lab.model.Location;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 
 @Repository
-public class EventRepository {
+public class InMemoryEventRepository {
 
-    public EventRepository() {
+    public InMemoryEventRepository() {
     }
 
     public List<Event> findAll() {
@@ -49,7 +48,7 @@ public class EventRepository {
         if (category == null || location == null) {
             throw new IllegalArgumentException();
         }
-        Event event = new Event((long) (Math.random() * 1000), name, description, popularityScore, category, location, false, 60);
+        Event event = new Event(name, description, popularityScore, category, location, 60);
         DataHolder.events.removeIf(event1 -> event1.getName().equals(name));
         DataHolder.events.add(event);
         return Optional.of(event);
@@ -59,11 +58,11 @@ public class EventRepository {
         DataHolder.events.removeIf(event -> event.getId().equals(id));
     }
 
-    public void like(Event event) {
-        double score = event.getPopularityScore();
-        event.setPopularityScore(score + 10);
-        event.setClicked(true);
-    }
+//    public void like(Event event) {
+//        double score = event.getPopularityScore();
+//        event.setPopularityScore(score + 10);
+//        event.setClicked(true);
+//    }
 
     public void decrementNum(Event event, int numTickets) {
         int numCarts = event.getNumTickets();

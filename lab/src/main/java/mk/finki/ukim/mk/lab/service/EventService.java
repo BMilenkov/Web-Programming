@@ -1,8 +1,6 @@
 package mk.finki.ukim.mk.lab.service;
 
-import mk.finki.ukim.mk.lab.model.Category;
 import mk.finki.ukim.mk.lab.model.Event;
-import mk.finki.ukim.mk.lab.model.Location;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,11 +14,14 @@ public interface EventService {
 
     List<Event> searchEvents(String text);
 
-    List<Event> searchByCategory(String category);
+    List<Event> findByLocation(Long locationId);
 
-    Optional<Event> save(String name, String description, double popularityScore, Long categoryId, Long locationId);
+    List<Event> findByCategory(Long categoryId);
+
+    void save(String name, String description, double popularityScore, Long categoryId, Long locationId, int numTickets);
 
     void deleteById(Long id);
-    void like(Long id);
-    void reserveCard(Event id, int numTickets);
+
+    //    void like(Long id);
+    void reserveCard(Long id, int numTickets);
 }

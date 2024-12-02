@@ -3,13 +3,17 @@ package mk.finki.ukim.mk.lab.web.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import mk.finki.ukim.mk.lab.model.Event;
 import mk.finki.ukim.mk.lab.model.EventBooking;
+import mk.finki.ukim.mk.lab.model.User;
 import mk.finki.ukim.mk.lab.service.EventBookingService;
 import mk.finki.ukim.mk.lab.service.EventService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/eventBooking")
@@ -23,9 +27,10 @@ public class EventBookingController {
     }
 
     @GetMapping
-    private String getEventBookingPage() {
-        //there is no need of model and request
-//        model.addAttribute("state", request.getSession().getAttribute("myBookings"));
+    private String getEventBookingPage(HttpServletRequest request, Model model) {
+        User user = (User) request.getSession().getAttribute("user");
+        List<EventBooking> myBookings = this.eventBookingService.findByUser(user.getUsername());
+        model.addAttribute("myBookings", myBookings);
         return "bookingConfirmation";
     }
 
@@ -34,11 +39,11 @@ public class EventBookingController {
                              @RequestParam String event,
                              @RequestParam int numTickets,
                              HttpServletRequest request) {
-        EventBooking booking = eventBookingService.placeBooking(event, attName, request.getRemoteAddr(), numTickets);
         Event Event = eventService.findByName(event).get();
         if (Event.getNumTickets() > numTickets) {
-            eventService.reserveCard(Event, numTickets);
-            request.getSession().setAttribute("myBookings", this.eventBookingService.listAll());
+            User user = (User) request.getSession().getAttribute("user");
+            EventBooking booking = eventBookingService.placeBooking(user, event, attName, request.getRemoteAddr(), numTickets);
+            eventService.reserveCard(Event.getId(), numTickets);
             return "redirect:/eventBooking";
         }
         return "redirect:/events?error=Not enough available tickets";
