@@ -29,6 +29,8 @@
             <div class="col-md-5">
                 <!-- Change form action based on edit or add -->
                 <form th:action="@{${event != null ? '/events/edit/' + event.id : '/events/add'}}" method="POST">
+                    <input id="id" type="hidden" name="eventId"
+                           th:value="(${event} != null ? ${event.getId()} : '')">
                     <div class="form-group">
                         <label for="name">Event Name</label>
                         <input type="text" class="form-control" id="name" name="name"

@@ -65,7 +65,8 @@ public class EventController {
     }
 
     @PostMapping("/add")
-    public String saveEvent(@RequestParam String name,
+    public String saveEvent(@RequestParam(required = false) Long eventId,
+                            @RequestParam String name,
                             @RequestParam String description,
                             @RequestParam Long categoryId,
                             @RequestParam double popularityScore,
@@ -95,14 +96,12 @@ public class EventController {
                             @RequestParam String description,
                             @RequestParam Long categoryId,
                             @RequestParam double popularityScore,
-                            @RequestParam Long locationId) {
-        if (this.eventService.findById(eventId).stream().findFirst().isPresent()) {
-            Event event = this.eventService.findById(eventId).stream().findFirst().get();
-            event.setName(name);
-            event.setDescription(description);
-            event.setPopularityScore(popularityScore);
-            event.setLocation(this.locationService.findById(locationId).stream().findFirst().get());
-            event.setCategory(this.categoryService.findById(categoryId).stream().findFirst().get());
+                            @RequestParam Long locationId,
+                            @RequestParam int numTickets) {
+        if (eventId != null) {
+            this.eventService.update(eventId, name, description, popularityScore,categoryId, locationId, numTickets);
+        } else {
+            this.eventService.save(name, description, popularityScore, categoryId, locationId, numTickets);
         }
         return "redirect:/events";
     }

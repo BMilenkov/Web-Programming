@@ -20,6 +20,9 @@ public interface EventService {
 
     void save(String name, String description, double popularityScore, Long categoryId, Long locationId, int numTickets);
 
+    void update(Long eventId, String name, String description, double popularityScore, Long categoryId, Long locationId, int numTickets);
+
+
     void deleteById(Long id);
 
     //    void like(Long id);

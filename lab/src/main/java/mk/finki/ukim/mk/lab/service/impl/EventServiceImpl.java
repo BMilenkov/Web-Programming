@@ -70,6 +70,31 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public void update(Long eventId, String name, String description, double popularityScore, Long categoryId, Long locationId, int numTickets) {
+        Event event = null;
+        Category category = null;
+        Location location = null;
+        if (categoryRepository.findById(categoryId).isPresent()) {
+            category = categoryRepository.findById(categoryId).get();
+        }
+        if (locationRepository.findById(locationId).isPresent()) {
+            location = locationRepository.findById(locationId).get();
+        }
+        if (eventRepository.findById(eventId).isPresent()) {
+            event = eventRepository.findById(eventId).get();
+        }
+        assert event != null;
+        event.setName(name);
+        event.setDescription(description);
+        event.setPopularityScore(popularityScore);
+        event.setCategory(category);
+        event.setLocation(location);
+        event.setNumTickets(numTickets);
+        this.eventRepository.save(event);
+    }
+
+
+    @Override
     public void deleteById(Long id) {
         eventRepository.deleteById(id);
     }
