@@ -17,6 +17,7 @@ public interface EventService {
     List<Event> findByLocation(Long locationId);
 
     List<Event> findByCategory(Long categoryId);
+    List<Event> findByLocationAndCategory(Long location, Long categoryId);
 
     void save(String name, String description, double popularityScore, Long categoryId, Long locationId, int numTickets);
 

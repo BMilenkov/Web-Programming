@@ -18,10 +18,9 @@ public class EventBookingServiceImpl implements EventBookingService {
     }
 
     @Override
-    public EventBooking placeBooking(User user, String eventName, String attendeeName, String attendeeAddress, int numberOfTickets) {
+    public void placeBooking(User user, String eventName, String attendeeName, String attendeeAddress, int numberOfTickets) {
         EventBooking eventBooking = new EventBooking(eventName, attendeeName, attendeeAddress, (long) numberOfTickets,user);
         eventBookingRepository.save(eventBooking);
-        return eventBooking;
     }
 
     @Override

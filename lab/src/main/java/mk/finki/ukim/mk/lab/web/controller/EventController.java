@@ -11,6 +11,7 @@ import mk.finki.ukim.mk.lab.service.LocationService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
@@ -32,26 +33,19 @@ public class EventController {
 
     @GetMapping
     public String getEventsPage(@RequestParam(required = false) String error,
-                                @RequestParam(required = false) String search,
                                 @RequestParam(required = false) Long searchByCategory,
                                 @RequestParam(required = false) Long searchByLocation,
                                 Model model, HttpSession session) {
         if (error != null && !error.isEmpty()) {
             model.addAttribute("hasError", true);
             model.addAttribute("error", error);
-        } else if (search != null && !search.isEmpty()) {
-            model.addAttribute("events", eventService.searchEvents(search));
-        } else if (searchByCategory != null) {
-            model.addAttribute("events", eventService.findByCategory(searchByCategory));
-        } else if (searchByLocation != null) {
-            model.addAttribute("events", eventService.findByLocation(searchByLocation));
-        } else {
-            model.addAttribute("events", eventService.listAll());
+        } else if (searchByCategory != null && searchByLocation != null) {
+            model.addAttribute("events",eventService.findByLocationAndCategory(searchByLocation, searchByCategory));
         }
         model.addAttribute("categories", categoryService.findAll());
         model.addAttribute("locations", locationService.findAll());
         User user = (User) session.getAttribute("user");
-        model.addAttribute("user", user.getName() + " " + user.getSurname());
+        model.addAttribute("user", user);
         return "listEvents";
     }
 
@@ -115,27 +109,34 @@ public class EventController {
     }
 
     @PostMapping("/search")
-    public String getSearchedEvents(@RequestParam String search) {
-        if (search != null && !search.isEmpty())
-            return "redirect:/events?search=" + search;
-        return "redirect:/events";
-    }
-
-    @PostMapping("/searchByCategory")
-    public String getSearchedByCategoryEvents(@RequestParam Long searchByCategory) {
-        if (categoryService.findById(searchByCategory).isPresent()) {
-            return "redirect:/events?searchByCategory=" + searchByCategory;
+    public String getSearchedEvents(@RequestParam String searchByCategory,
+                                    @RequestParam String searchByLocation) {
+        if (searchByCategory != null && !searchByCategory.isEmpty()
+                && searchByLocation != null && !searchByLocation.isEmpty()) {
+            String url = UriComponentsBuilder.fromPath("/events")
+                    .queryParam("searchByCategory", searchByCategory)
+                    .queryParam("searchByLocation", searchByLocation)
+                    .toUriString();
+            return "redirect:" + url;
         }
         return "redirect:/events";
     }
 
-    @PostMapping("/searchByLocation")
-    public String getSearchedByLocationEvents(@RequestParam Long searchByLocation) {
-        if (!eventService.findByLocation(searchByLocation).isEmpty()) {
-            return "redirect:/events?searchByLocation=" + searchByLocation;
-        }
-        return "redirect:/events";
-    }
+//    @PostMapping("/searchByCategory")
+//    public String getSearchedByCategoryEvents(@RequestParam Long searchByCategory) {
+//        if (categoryService.findById(searchByCategory).isPresent()) {
+//            return "redirect:/events?searchByCategory=" + searchByCategory;
+//        }
+//        return "redirect:/events";
+//    }
+//
+//    @PostMapping("/searchByLocation")
+//    public String getSearchedByLocationEvents(@RequestParam Long searchByLocation) {
+//        if (!eventService.findByLocation(searchByLocation).isEmpty()) {
+//            return "redirect:/events?searchByLocation=" + searchByLocation;
+//        }
+//        return "redirect:/events";
+//    }
 
     @GetMapping("/details/{id}")
     public String getDetails(@PathVariable Long id, Model model) {
@@ -145,10 +146,4 @@ public class EventController {
         model.addAttribute("event", event);
         return "details";
     }
-
-//    @PostMapping("/like/{id}")
-//    public String likeEvent(@PathVariable Long id){
-//        this.eventService.like(id);
-//        return "redirect:/events/details/{id}";
-//    }
 }

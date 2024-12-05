@@ -39,10 +39,14 @@ public class EventBookingController {
                              @RequestParam String event,
                              @RequestParam int numTickets,
                              HttpServletRequest request) {
-        Event Event = eventService.findByName(event).get();
+        Event Event = null;
+        if (eventService.findByName(event).isPresent())
+            Event = eventService.findByName(event).get();
+
+        assert Event != null;
         if (Event.getNumTickets() > numTickets) {
             User user = (User) request.getSession().getAttribute("user");
-            EventBooking booking = eventBookingService.placeBooking(user, event, attName, request.getRemoteAddr(), numTickets);
+            eventBookingService.placeBooking(user, event, attName, request.getRemoteAddr(), numTickets);
             eventService.reserveCard(Event.getId(), numTickets);
             return "redirect:/eventBooking";
         }

@@ -60,6 +60,11 @@ public class EventServiceImpl implements EventService {
         return eventRepository.findAllByCategory_Id(categoryId);
     }
 
+    @Override
+    public List<Event> findByLocationAndCategory(Long location, Long categoryId) {
+        return eventRepository.findAllByLocation_IdAndCategory_Id(location, categoryId);
+    }
+
 
     @Override
     public void save(String name, String description, double popularityScore,

@@ -72,7 +72,7 @@ public class EventListServlet extends HttpServlet {
             String address = req.getRemoteAddr();
             int numTickets = Integer.parseInt(req.getParameter("numTickets"));
             User user = (User) req.getSession().getAttribute("user");
-            EventBooking newBooking = eventBookingService.placeBooking(user,name, attName, address, numTickets);
+            eventBookingService.placeBooking(user,name, attName, address, numTickets);
             req.getSession().setAttribute("myBookings", eventBookingService.listAll());
 //            req.getSession().setAttribute("myBookings", eventBookingService.placeBooking(name, attName, address, numTickets));
             resp.sendRedirect("/eventBooking");
