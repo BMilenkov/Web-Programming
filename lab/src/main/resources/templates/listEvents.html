@@ -88,7 +88,9 @@
                     <div class="card mb-3">
                         <div class="card-body">
                             <h5 class="card-title">
-                                <input type="radio" name="event" th:value="${event.name}">
+                                <label>
+                                    <input type="radio" name="event" th:value="${event.name}">
+                                </label>
                                 <span th:text="${event.name}"></span>
                             </h5>
                             <p class="card-text">

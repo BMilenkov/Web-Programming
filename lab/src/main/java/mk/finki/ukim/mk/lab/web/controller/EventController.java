@@ -42,6 +42,7 @@ public class EventController {
         } else if (searchByCategory != null && searchByLocation != null) {
             model.addAttribute("events",eventService.findByLocationAndCategory(searchByLocation, searchByCategory));
         }
+        model.addAttribute("events",eventService.listAll());
         model.addAttribute("categories", categoryService.findAll());
         model.addAttribute("locations", locationService.findAll());
         User user = (User) session.getAttribute("user");
