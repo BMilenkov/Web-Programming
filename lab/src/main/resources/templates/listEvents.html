@@ -49,6 +49,7 @@
                     <label for="categorySelect" class="form-label">Category:</label>
                     <div class="input-group">
                         <select id="categorySelect" name="searchByCategory" class="form-select">
+                            <option value="">All categories</option>
                             <option th:each="cat : ${categories}" th:value="${cat.id}"
                                     th:text="${cat.category}">
                             </option>
@@ -61,6 +62,7 @@
                     <label for="locationSelect" class="form-label">Location:</label>
                     <div class="input-group">
                         <select id="locationSelect" name="searchByLocation" class="form-select">
+                            <option value="">All locations</option>
                             <option th:each="loc : ${locations}" th:value="${loc.id}"
                                     th:text="${loc.name}">
                             </option>

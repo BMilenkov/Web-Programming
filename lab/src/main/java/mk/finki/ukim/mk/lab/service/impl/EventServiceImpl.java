@@ -51,20 +51,15 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Event> findByLocation(Long locationId) {
-        return eventRepository.findAllByLocation_Id(locationId);
-    }
-
-    @Override
-    public List<Event> findByCategory(Long categoryId) {
-        return eventRepository.findAllByCategory_Id(categoryId);
-    }
-
-    @Override
     public List<Event> findByLocationAndCategory(Long location, Long categoryId) {
-        return eventRepository.findAllByLocation_IdAndCategory_Id(location, categoryId);
+        if(location != null && categoryId != null)
+            return eventRepository.findAllByLocation_IdAndCategory_Id(location,categoryId);
+        else if(location != null)
+            return eventRepository.findAllByLocation_Id(location);
+        else if(categoryId != null)
+            return eventRepository.findAllByCategory_Id(categoryId);
+        return eventRepository.findAll();
     }
-
 
     @Override
     public void save(String name, String description, double popularityScore,
@@ -107,14 +102,6 @@ public class EventServiceImpl implements EventService {
     @Override
     @Transactional
     public void reserveCard(Long eventId, int numTickets) {
-        this.eventRepository.decrementNum(eventId, numTickets);
+        this.eventRepository.reserveTickets(eventId, numTickets);
     }
-
-    //    @Override
-//    public void like(Long id) {
-//        Event event = null;
-//        if (this.eventRepository.findById(id).isPresent())
-//            event = this.eventRepository.findById(id).get();
-//        this.eventRepository.like(event);
-//    }
 }

@@ -1,6 +1,5 @@
 package mk.finki.ukim.mk.lab.repository.jpa;
 
-import mk.finki.ukim.mk.lab.model.Category;
 import mk.finki.ukim.mk.lab.model.Event;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -28,5 +27,5 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Query("UPDATE Event e" +
             " SET e.numTickets = e.numTickets - :numTickets " +
             "WHERE e.id = :eventId AND e.numTickets >= :numTickets")
-    void decrementNum(@Param("eventId") Long eventId, @Param("numTickets") int numTickets);
+    void reserveTickets(@Param("eventId") Long eventId, @Param("numTickets") int numTickets);
 }
