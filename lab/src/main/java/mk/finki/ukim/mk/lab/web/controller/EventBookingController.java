@@ -28,8 +28,8 @@ public class EventBookingController {
 
     @GetMapping
     private String getEventBookingPage(HttpServletRequest request, Model model) {
-        User user = (User) request.getSession().getAttribute("user");
-        List<EventBooking> myBookings = this.eventBookingService.findByUser(user.getUsername());
+        String username = request.getRemoteUser();
+        List<EventBooking> myBookings = this.eventBookingService.findByUser(username);
         model.addAttribute("myBookings", myBookings);
         return "bookingConfirmation";
     }
@@ -45,8 +45,8 @@ public class EventBookingController {
 
         assert Event != null;
         if (Event.getNumTickets() > numTickets) {
-            User user = (User) request.getSession().getAttribute("user");
-            eventBookingService.placeBooking(user, event, attName, request.getRemoteAddr(), numTickets);
+            String username = request.getRemoteUser();
+            eventBookingService.placeBooking(username, event, attName, request.getRemoteAddr(), numTickets);
             eventService.reserveCard(Event.getId(), numTickets);
             return "redirect:/eventBooking";
         }

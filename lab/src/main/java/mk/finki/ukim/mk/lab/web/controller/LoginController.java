@@ -18,8 +18,11 @@ public class LoginController {
 
     //@RequestMapping(method = RequestMethod.GET, value = "/login")
     @GetMapping
-    public String getLoginPage() {
-        // Return the name of the Thymeleaf template that will be used to render the login page
+    public String getLoginPage(@RequestParam(required = false) String error, Model model ) {
+        if (error != null) {
+            model.addAttribute("hasError", true);
+            model.addAttribute("error", error);
+        }
         return "login";
     }
     @PostMapping

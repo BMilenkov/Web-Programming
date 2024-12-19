@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface EventBookingService {
 
-    void placeBooking(User user, String eventName, String attendeeName, String attendeeAddress, int numberOfTickets);
+    void placeBooking(String username, String eventName, String attendeeName, String attendeeAddress, int numberOfTickets);
     List<EventBooking> listAll();
     List<EventBooking> searchEvents(String text);
     List<EventBooking> findByUser(String username);

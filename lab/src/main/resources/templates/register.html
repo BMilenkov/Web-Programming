@@ -48,6 +48,16 @@
                        autofocus="">
             </p>
 
+            <label>Role:</label>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" id="roleUser" name="role" value="ROLE_USER" required>
+                <label class="form-check-label" for="roleUser">User</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" id="roleAdmin" name="role" value="ROLE_ADMIN" required>
+                <label class="form-check-label" for="roleAdmin">Admin</label>
+            </div>
+
             <th:block th:if="${hasError}">
                 <div th:text="${error}" class="text-danger"></div>
             </th:block>

@@ -1,4 +1,5 @@
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
     <title>Event Booking page - Welcome and choose an Event</title>
@@ -22,17 +23,35 @@
 <div class="container mt-4">
     <header class="d-flex justify-content-between align-items-center mb-5">
         <h1 class="display-4 font-weight-bold text-center flex-grow-1">Event Booking App</h1>
-        <div th:if="${user != null}" class="d-flex flex-column align-items-end">
-            <p class="lead text-muted mb-2">
-                Welcome back, <span th:text="${user.getUsername()}" class="font-weight-bold text-primary"></span>
+        <div sec:authorize="isAuthenticated()" class="d-flex flex-column align-items-end">
+            <p class="lead text-muted mb-2 text-right">
+                Welcome back, <span th:text="${username}" class="font-weight-bold text-primary"></span>
             </p>
             <div class="d-flex">
-                <!-- My Bookings Button -->
-                <a th:href="@{/eventBooking}" class="btn btn-outline-primary btn-sm mr-2">My Bookings</a>
-                <a th:href="@{/logout}" class="btn btn-outline-danger btn-sm">Logout</a>
+                <a th:href="@{/eventBooking}" class="btn btn-primary btn-md mr-2">
+                    <i class="fas fa-calendar-check"></i> My Bookings
+                </a>
+                <a th:href="@{/logout}" class="btn btn-danger btn-md">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </div>
+        <div sec:authorize="isAnonymous()" class="d-flex flex-column align-items-end">
+            <p class="text-muted text-right mb-2">
+                Login to book and manage events effortlessly.
+            </p>
+            <div>
+                <a th:href="@{/login}" class="btn btn-success btn-md mr-2">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </a>
+                <a th:href="@{/register}" class="btn btn-outline-primary btn-md">
+                    <i class="fas fa-user-plus"></i> Sign Up
+                </a>
             </div>
         </div>
     </header>
+
+
     <main>
         <div th:if="${hasError}">
             <div class="alert alert-danger" role="alert">
@@ -76,14 +95,13 @@
             </form>
         </div>
 
-
-        <h2 class="mb-4">Choose an event:</h2>
+        <h2 class="mb-4">Choose an Event:</h2>
         <!-- Display radio buttons for each event -->
         <form th:action='@{/eventBooking/book}' th:method="POST">
-            <div class="form-group">
+            <div sec:authorize="isAuthenticated()" class="form-group">
                 <label for="attName">Your name:</label>
                 <input type="text" class="form-control" id="attName" name="attName" required
-                       th:value="${user.name}">
+                       th:value="${name}">
             </div>
             <div class="mb-4">
                 <div th:each="event : ${events}">
@@ -105,10 +123,12 @@
                                 <strong>Available Tickets:</strong> <span
                                     th:text="${event.getNumTickets()}"></span><br/>
                             </p>
-                            <a th:href="@{'/events/edit-form/{id}' (id=${event.getId()})}" class="btn btn-info btn-sm">
+                            <a sec:authorize="hasRole('ROLE_ADMIN')"
+                               th:href="@{'/events/edit-form/{id}' (id=${event.getId()})}" class="btn btn-info btn-sm">
                                 <i class="fa fa-edit"></i> Edit
                             </a>
-                            <a th:href="@{'/events/delete/{id}' (id=${event.getId()})}" class="btn btn-danger btn-sm">
+                            <a sec:authorize="hasRole('ROLE_ADMIN')"
+                               th:href="@{'/events/delete/{id}' (id=${event.getId()})}" class="btn btn-danger btn-sm">
                                 <i class="fa fa-trash"></i> Delete
                             </a>
                             <a th:href="@{'/events/details/{id}' (id=${event.getId()})}" class="btn btn-danger btn-sm">
@@ -118,11 +138,13 @@
                     </div>
                 </div>
             </div>
-
-            <h2 class="mb-4">Choose number of tickets:</h2>
-            <div class="form-group">
-                <label for="numTickets">Number of tickets:</label>
-                <input type="number" class="form-control" id="numTickets" name="numTickets" min="1" max="40" required>
+            <div>
+                <h2 class="mb-4">Choose number of tickets:</h2>
+                <div class="form-group">
+                    <label for="numTickets">Number of tickets:</label>
+                    <input type="number" class="form-control" id="numTickets" name="numTickets" min="1" max="40"
+                           required>
+                </div>
             </div>
 
             <div class="form-group text-center">
@@ -130,7 +152,7 @@
             </div>
         </form>
 
-        <div class="col mb-3 mt-4">
+        <div sec:authorize="hasRole('ROLE_ADMIN')" class="col mb-3 mt-4">
             <div class="row">
                 <div class="col-md-12">
                     <a href="/events/add-form" class="btn btn-dark btn-block">

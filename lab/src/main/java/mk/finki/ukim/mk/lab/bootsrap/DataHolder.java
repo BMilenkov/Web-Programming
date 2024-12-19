@@ -2,10 +2,12 @@ package mk.finki.ukim.mk.lab.bootsrap;
 
 import jakarta.annotation.PostConstruct;
 import mk.finki.ukim.mk.lab.model.*;
+import mk.finki.ukim.mk.lab.model.enumerations.Role;
 import mk.finki.ukim.mk.lab.repository.jpa.CategoryRepository;
 import mk.finki.ukim.mk.lab.repository.jpa.EventRepository;
 import mk.finki.ukim.mk.lab.repository.jpa.LocationRepository;
 import mk.finki.ukim.mk.lab.repository.jpa.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -14,23 +16,29 @@ import java.util.List;
 
 @Component
 public class DataHolder {
+    //Lists
     public static List<Event> events = null;
     public static List<EventBooking> MyBookings = null;
     public static List<Category> categories = null;
     public static List<Location> locations = null;
     public static List<User> users = null;
 
+    //Repos
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     private final LocationRepository locationRepository;
     private final EventRepository eventRepository;
 
+    //PasswordEncoder
+    private final PasswordEncoder passwordEncoder;
+
     public DataHolder(CategoryRepository categoryRepository, UserRepository userRepository,
-                      LocationRepository locationRepository, EventRepository eventRepository) {
+                      LocationRepository locationRepository, EventRepository eventRepository, PasswordEncoder passwordEncoder) {
         this.categoryRepository = categoryRepository;
         this.userRepository = userRepository;
         this.locationRepository = locationRepository;
         this.eventRepository = eventRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -80,9 +88,9 @@ public class DataHolder {
         //Users
         users = new ArrayList<>();
         if (this.userRepository.count() == 0) {
-            users.add(new User("branko.milenkov", "bm", "Branko", "Milenkov"));
-            users.add(new User("vase.lazarev", "vazna", "Vase", "Lazarev"));
-            users.add(new User("hristijan.stoimilov", "produkcija", "Hristijan", "Stoimilov"));
+            users.add(new User("branko.milenkov", passwordEncoder.encode("bm"), "Branko", "Milenkov", Role.ROLE_ADMIN));
+            users.add(new User("vase.lazarev", passwordEncoder.encode("vazna"), "Vase", "Lazarev", Role.ROLE_USER));
+            users.add(new User("hristijan.stoimilov", passwordEncoder.encode("produkcija"), "Hristijan", "Stoimilov", Role.ROLE_USER));
             this.userRepository.saveAll(users);
         }
     }
