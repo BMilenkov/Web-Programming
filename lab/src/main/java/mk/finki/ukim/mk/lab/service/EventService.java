@@ -1,12 +1,15 @@
 package mk.finki.ukim.mk.lab.service;
 
 import mk.finki.ukim.mk.lab.model.Event;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface EventService {
     List<Event> listAll();
+
+    Page<Event> findPage(Long categoryId, Long locationId, Integer pageNum, Integer pageSize);
 
     Optional<Event> findById(Long id);
 
@@ -20,9 +23,7 @@ public interface EventService {
 
     void update(Long eventId, String name, String description, double popularityScore, Long categoryId, Long locationId, int numTickets);
 
-
     void deleteById(Long id);
 
-    //    void like(Long id);
     void reserveCard(Long id, int numTickets);
 }

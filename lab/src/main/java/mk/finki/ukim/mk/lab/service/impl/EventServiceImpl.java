@@ -9,11 +9,17 @@ import mk.finki.ukim.mk.lab.repository.jpa.CategoryRepository;
 import mk.finki.ukim.mk.lab.repository.jpa.EventRepository;
 import mk.finki.ukim.mk.lab.repository.jpa.LocationRepository;
 import mk.finki.ukim.mk.lab.service.EventService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+
+import static mk.finki.ukim.mk.lab.service.specifications.FieldFilterSpecification.filterEquals;
 
 @Service
 public class EventServiceImpl implements EventService {
@@ -33,6 +39,19 @@ public class EventServiceImpl implements EventService {
     public List<Event> listAll() {
         return eventRepository.findAll();
     }
+
+    @Override
+    public Page<Event> findPage(Long categoryId, Long locationId, Integer pageNum, Integer pageSize) {
+        Specification<Event> specification = Specification
+                .where(filterEquals(Event.class, "category.id", categoryId))
+                .and(filterEquals(Event.class, "location.id", locationId));
+
+        return this.eventRepository.findAll(
+                specification,
+                PageRequest.of(pageNum - 1, pageSize, Sort.by(Sort.Direction.DESC, "name"))
+        );
+    }
+
 
     @Override
     public Optional<Event> findById(Long id) {

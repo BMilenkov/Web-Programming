@@ -12,7 +12,7 @@ import java.util.Optional;
 
 
 @Repository
-public interface EventRepository extends JpaRepository<Event, Long> {
+public interface EventRepository extends JpaSpecificationRepository<Event, Long> {
 
     Optional<Event> findByName(String name);
 
@@ -21,6 +21,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findAllByCategory_Id(Long categoryId);
 
     List<Event> findAllByNameLike(String name);
+
     List<Event> findAllByLocation_IdAndCategory_Id(Long locationId, Long categoryId);
 
     @Modifying

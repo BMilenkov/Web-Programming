@@ -8,6 +8,7 @@ import mk.finki.ukim.mk.lab.service.AuthService;
 import mk.finki.ukim.mk.lab.service.CategoryService;
 import mk.finki.ukim.mk.lab.service.EventService;
 import mk.finki.ukim.mk.lab.service.LocationService;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,12 +39,16 @@ public class EventController {
     public String getEventsPage(@RequestParam(required = false) String error,
                                 @RequestParam(required = false) Long searchByCategory,
                                 @RequestParam(required = false) Long searchByLocation,
+                                @RequestParam(defaultValue = "1") Integer pageNum,
+                                @RequestParam(defaultValue = "10") Integer pageSize,
                                 Model model, HttpServletRequest request) {
         if (error != null && !error.isEmpty()) {
             model.addAttribute("hasError", true);
             model.addAttribute("error", error);
         }
-        model.addAttribute("events", eventService.findByLocationAndCategory(searchByLocation, searchByCategory));
+        //model.addAttribute("events", eventService.findByLocationAndCategory(searchByLocation, searchByCategory));
+        Page<Event> page = this.eventService.findPage(searchByCategory, searchByLocation, pageNum, pageSize);
+        model.addAttribute("page", page);
         model.addAttribute("categories", categoryService.findAll());
         model.addAttribute("locations", locationService.findAll());
         String username = request.getRemoteUser();

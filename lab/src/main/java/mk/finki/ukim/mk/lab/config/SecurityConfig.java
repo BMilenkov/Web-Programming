@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -32,6 +33,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.csrf(AbstractHttpConfigurer::disable)
+                .headers((headers) -> headers
+                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
+                )
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/", "/events", "/assets/**", "/register",
                                 "/events/search",
@@ -62,11 +66,11 @@ public class SecurityConfig {
     }
 
     // In Memory Authentication
-   // @Bean
+    //@Bean
     public UserDetailsService userDetailsService() {
         UserDetails user1 = User.builder()
                 .username("vase.lazarev")
-                .password(passwordEncoder.encode("vl"))
+                .password(passwordEncoder.encode("vazna"))
                 .roles("USER")
                 .build();
         UserDetails user2 = User.builder()

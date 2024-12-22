@@ -18,6 +18,24 @@
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/e59232f0a1.js" crossorigin="anonymous"></script>
+    <style>
+        .stars {
+            display: inline-block;
+            color: #ddd;
+            font-size: 1.2em;
+        }
+        .stars .fa {
+            margin-right: 2px;
+        }
+
+        .stars .fa.checked {
+            color: #ffcc00;
+        }
+
+        .stars .fa-star-half-alt.checked {
+            color: #ffcc00;
+        }
+    </style>
 </head>
 <body>
 <div class="container mt-4">
@@ -104,7 +122,7 @@
                        th:value="${name}">
             </div>
             <div class="mb-4">
-                <div th:each="event : ${events}">
+                <div th:each="event : ${page.getContent()}">
                     <div class="card mb-3">
                         <div class="card-body">
                             <h5 class="card-title">
@@ -114,14 +132,20 @@
                                 <span th:text="${event.name}"></span>
                             </h5>
                             <p class="card-text">
-                                <!--                                <strong>Description:</strong> <span th:text="${event.description}"></span><br/>-->
-                                <!--                                <strong>Rating:</strong> <span th:text="${event.popularityScore}"></span><br/>-->
-                                <strong>Location:</strong> <span
-                                    th:text="${event.getLocation().getName()}"></span><br/>
-                                <strong>Category:</strong> <span
-                                    th:text="${event.getCategory().category}"></span><br/>
-                                <strong>Available Tickets:</strong> <span
-                                    th:text="${event.getNumTickets()}"></span><br/>
+                                <strong>Rating:</strong>
+                            <div class="stars" th:each="i : ${#numbers.sequence(1, 5)}">
+                                <i class="fa"
+                                   th:classappend="${i <= (event.popularityScore / 2) ? 'fa-star checked' :
+                                   (i - 1 < (event.popularityScore / 2) ? 'fa-star-half-alt checked' : 'fa-star')}"></i>
+                            </div>
+                            </br>
+                            </br>
+                            <strong>Location:</strong> <span
+                                th:text="${event.getLocation().getName()}"></span><br/>
+                            <strong>Category:</strong> <span
+                                th:text="${event.getCategory().category}"></span><br/>
+                            <strong>Available Tickets:</strong> <span
+                                th:text="${event.getNumTickets()}"></span><br/>
                             </p>
                             <a sec:authorize="hasRole('ROLE_ADMIN')"
                                th:href="@{'/events/edit-form/{id}' (id=${event.getId()})}" class="btn btn-info btn-sm">
@@ -150,6 +174,7 @@
             <div class="form-group text-center">
                 <button type="submit" class="btn btn-primary">Submit</button>
             </div>
+            <div th:include="fragments/paging :: pageSection(${page})"></div>
         </form>
 
         <div sec:authorize="hasRole('ROLE_ADMIN')" class="col mb-3 mt-4">
