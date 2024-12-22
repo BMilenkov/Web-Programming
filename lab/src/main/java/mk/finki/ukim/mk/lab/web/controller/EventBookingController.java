@@ -8,12 +8,10 @@ import mk.finki.ukim.mk.lab.service.EventBookingService;
 import mk.finki.ukim.mk.lab.service.EventService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/eventBooking")
@@ -51,5 +49,20 @@ public class EventBookingController {
             return "redirect:/eventBooking";
         }
         return "redirect:/events?error=Not enough available tickets";
+    }
+
+    @GetMapping("/cancel/{id}")
+    private String cancelEventBooking(@PathVariable Long id) {
+        EventBooking eventBooking = this.eventBookingService.findById(id);
+        Long numTickets = eventBooking.getNumberOfTickets();
+        Optional<Event> event = this.eventService.findByName(eventBooking.getEventName());
+
+        if (event.isPresent()) {
+            Event ev = event.get();
+            this.eventService.update(ev.getId(), ev.getName(), ev.getDescription(), ev.getPopularityScore(), ev.getCategory().getId()
+                    ,ev.getLocation().getId(), (int) (ev.getNumTickets() + numTickets));
+        }
+        this.eventBookingService.deleteEventBooking(id);
+        return "redirect:/eventBooking";
     }
 }

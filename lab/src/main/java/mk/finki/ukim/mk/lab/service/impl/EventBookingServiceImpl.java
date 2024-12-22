@@ -2,6 +2,7 @@ package mk.finki.ukim.mk.lab.service.impl;
 
 import mk.finki.ukim.mk.lab.model.EventBooking;
 import mk.finki.ukim.mk.lab.model.User;
+import mk.finki.ukim.mk.lab.model.exceptions.EventBookingNotFoundException;
 import mk.finki.ukim.mk.lab.model.exceptions.UserNotFoundException;
 import mk.finki.ukim.mk.lab.repository.inMemory.InMemoryEventBookingRepository;
 import mk.finki.ukim.mk.lab.repository.jpa.EventBookingRepository;
@@ -23,8 +24,8 @@ public class EventBookingServiceImpl implements EventBookingService {
 
     @Override
     public void placeBooking(String username, String eventName, String attendeeName, String attendeeAddress, int numberOfTickets) {
-        User user = this.userRepository.findByUsername(username).orElseThrow(()-> new UserNotFoundException(username));
-        EventBooking eventBooking = new EventBooking(eventName, attendeeName, attendeeAddress, (long) numberOfTickets,user);
+        User user = this.userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException(username));
+        EventBooking eventBooking = new EventBooking(eventName, attendeeName, attendeeAddress, (long) numberOfTickets, user);
         eventBookingRepository.save(eventBooking);
     }
 
@@ -41,5 +42,15 @@ public class EventBookingServiceImpl implements EventBookingService {
     @Override
     public List<EventBooking> findByUser(String username) {
         return eventBookingRepository.findAllByUser_Username(username);
+    }
+
+    @Override
+    public EventBooking findById(Long id) {
+        return this.eventBookingRepository.findById(id).orElseThrow(()-> new EventBookingNotFoundException(id));
+    }
+
+    @Override
+    public void deleteEventBooking(Long id) {
+        eventBookingRepository.deleteById(id);
     }
 }

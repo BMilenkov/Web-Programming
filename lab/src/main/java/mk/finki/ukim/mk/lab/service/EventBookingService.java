@@ -12,4 +12,6 @@ public interface EventBookingService {
     List<EventBooking> listAll();
     List<EventBooking> searchEvents(String text);
     List<EventBooking> findByUser(String username);
+    EventBooking findById(Long id);
+    void deleteEventBooking(Long id);
 }

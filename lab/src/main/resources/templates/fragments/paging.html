@@ -38,6 +38,7 @@
 
                 <select id="results" class="form-control custom-select" style="max-width: 100px;"
                         onchange="updateQueryStringParameter('pageSize',this.value)">
+                    <option value="5" th:selected="${page.size == 5}">5</option>
                     <option value="10" th:selected="${page.size == 10}">10</option>
                     <option value="20" th:selected="${page.size == 20}">20</option>
                     <option value="50" th:selected="${page.size == 50}">50</option>

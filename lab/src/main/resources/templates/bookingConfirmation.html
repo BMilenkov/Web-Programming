@@ -43,17 +43,22 @@
                     <thead class="thead-dark">
                     <tr>
                         <th>Attendee Name</th>
-                        <th>Client IP Address</th>
                         <th>Booking for Event</th>
                         <th>Number of Tickets</th>
+                        <th>Cancellation</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="booking : ${myBookings}">
                         <td th:text="${booking.attendeeName}"></td>
-                        <td th:text="${booking.attendeeAddress}"></td>
                         <td th:text="${booking.eventName}"></td>
                         <td th:text="${booking.numberOfTickets}"></td>
+                        <td>
+                            <a th:href="@{'/eventBooking/cancel/{id}' (id=${booking.id})}"
+                               class="btn btn-danger btn-md">
+                                <i class="fa fa-times"></i> Cancel
+                            </a>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
